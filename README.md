@@ -4,7 +4,7 @@ Created by Cory Guynn, 2024
 
 ## Overview
 
-This tool automates the creation of Cisco Meraki API documentation from an OpenAPI specification. It fetches the most recent API spec and organizes it into human-readable formats.
+This tool automates the creation of Cisco Meraki [API Index](https://developer.cisco.com/meraki/api/api-index/) documentation from an OpenAPI specification. It fetches the most recent API release and organizes it into human-readable formats.
 
 ## Outputs:
 
