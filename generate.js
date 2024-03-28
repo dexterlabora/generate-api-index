@@ -37,19 +37,43 @@ const fetch = require('node-fetch');
 const { parse } = require('json2csv');
 
 // Constants
-const API_SPEC_URL = 'https://raw.githubusercontent.com/meraki/openapi/v1-beta/openapi/spec3.json';
+const DEFAULT_API_SPEC_URL = 'https://raw.githubusercontent.com/meraki/openapi/v1-beta/openapi/spec3.json';
+
 const CSV_FILENAME = 'meraki-api-index.csv';
 const MD_FILENAME = 'meraki-api-index.md';
 const HTML_FILENAME = 'meraki-api-index.html';
 
 // Helper Functions
-function toKebabCase(str) {
-    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+// Determine if input is a URL
+const isUrl = (input) => {
+    try {
+        new URL(input);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
+// Dynamically fetch or read the OpenAPI specification
+async function fetchOpenAPISpec(customSpecPath) {
+    if (isUrl(customSpecPath)) {
+        // Fetch the spec from a URL
+        const response = await fetch(customSpecPath);
+        return response.json();
+    } else if (fs.existsSync(customSpecPath)) {
+        // Read the spec from a local file
+        const spec = fs.readFileSync(customSpecPath, 'utf8');
+        return JSON.parse(spec);
+    } else {
+        // Use the default URL
+        const response = await fetch(DEFAULT_API_SPEC_URL);
+        return response.json();
+    }
 }
 
-async function fetchOpenAPISpec() {
-    const response = await fetch(API_SPEC_URL);
-    return response.json();
+function toKebabCase(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 // Parses the Swagger paths from the specification into reportable formats.
@@ -172,10 +196,14 @@ function markdownToHtmlTable(data, fields) {
 
 
 async function generateData() {
+    // Capture custom spec path or URL from CLI arguments
+    const customSpecPath = process.argv[2];
+
     const targetDirectory = setupTargetDirectoryAndCopyFiles(); // Set up directory and copy supporting files
 
     try {
-        const spec = await fetchOpenAPISpec();
+        // Pass the custom or default spec URL/path to fetchOpenAPISpec
+        const spec = await fetchOpenAPISpec(customSpecPath || DEFAULT_API_SPEC_URL);
         const { markdownReport, csvReport } = parseSwaggerPaths(spec);
         const apiVersion = spec.info.version;
         const fields = ["Operation", "Path Parameters", "Request Parameters", "Response Parameters"];
@@ -237,7 +265,7 @@ async function generateData() {
 function setupTargetDirectoryAndCopyFiles() {
     const currentDirectory = process.cwd();
     const scriptDirectory = __dirname;
-    
+
     let targetDirectory = currentDirectory;
     // Check if the script is run in its own directory
     if (currentDirectory === scriptDirectory) {
