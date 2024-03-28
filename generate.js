@@ -124,21 +124,6 @@ function extractResponseSchemas(responses) {
     return Array.from(propertiesSet).sort().join(", ");
 }
 
-
-// // Extracts request body schema property names.
-// function extractRequestBodyProperties(requestBody) {
-//     let properties = [];
-//     if (requestBody && requestBody.content && requestBody.content['application/json'] && requestBody.content['application/json'].schema) {
-//         let schema = requestBody.content['application/json'].schema;
-//         if (schema.type === 'object' && schema.properties) {
-//             properties = Object.keys(schema.properties);
-//         } else if (schema.type === 'array' && schema.items && schema.items.properties) {
-//             properties = Object.keys(schema.items.properties);
-//         }
-//     }
-//     return properties.sort().join(", ");
-// }
-
 // Extracts request body schema property names function to handle nested properties.
 function extractRequestBodyProperties(requestBody) {
     let propertiesSet = new Set();
