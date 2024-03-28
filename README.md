@@ -4,7 +4,9 @@ Created by Cory Guynn, 2024
 
 ## Overview
 
-This script automates the generation of the Cisco Meraki API documentation directly from the OpenAPI specification. It fetches the latest API spec and parses it to extract and organize API paths, operations, parameters, and response schemas into a human-readable format.
+This script automates the generation of the [Meraki API Index](https://developer.cisco.com/meraki/api/api-index/) documentation directly from the OpenAPI specification. It fetches the latest API spec and parses it to extract and organize API paths, operations, parameters, and response schemas into a human-readable format.
+
+
 
 ### Outputs:
 
