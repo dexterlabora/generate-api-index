@@ -1,6 +1,6 @@
 # Meraki API Index Generator
 
-Created by Cory Guynn, 2024 /w some help from GPT-4
+Created by Cory Guynn, 2024
 
 ## Overview
 
